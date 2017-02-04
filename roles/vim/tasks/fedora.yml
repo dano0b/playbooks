@@ -1,0 +1,6 @@
+---
+
+- name: ensure git package
+  dnf:
+    name: git
+    state: installed

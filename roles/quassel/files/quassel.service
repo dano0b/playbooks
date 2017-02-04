@@ -1,0 +1,12 @@
+[Unit]
+Description=Quassel Core
+After=network.target
+
+[Service]
+User=quassel
+Group=quassel
+PIDFile=/var/run/quassel.pid
+ExecStart=/usr/bin/quasselcore
+
+[Install]
+WantedBy=multi-user.target

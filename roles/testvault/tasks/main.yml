@@ -1,0 +1,7 @@
+- name: test vault
+  copy:
+    src: testfile
+    dest: /tmp/testfile
+    owner: root
+    group: root
+    mode: 0644

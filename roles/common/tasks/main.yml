@@ -1,0 +1,6 @@
+- name: upgrade all packages
+  yum:
+    name: "*"
+    state: latest
+  register: yumUpdateStatus
+  notify: "reboot and wait"

@@ -1,0 +1,103 @@
+- name: Add nginx repository
+  yum_repository:
+    name: nginx
+    description: NGINX YUM repo
+    baseurl: https://download.fedoraproject.org/pub/epel/$releasever/$basearch/
+
+- name: install the latest version of git
+  package:
+    name: git
+    state: latest
+
+- name: install the latest version of nginx
+  package:
+    name: nginx
+    state: latest
+
+- name: checkout https://github.com/dano0b/www.linuxisfreak.in.git
+  git:
+    repo: https://github.com/dano0b/www.linuxisfreak.in.git
+    dest: /var/www/www.linuxisfreak.in/html
+    force: yes
+
+- name: ensure /var/www/www.linuxisfreak.in folder
+  file:
+    path: /var/www/www.linuxisfreak.in/html
+    state: directory
+    owner: nginx
+    group: nginx
+
+- name: ensure permissions docroot folder
+  file:
+    path: /var/www/www.linuxisfreak.in/html
+    state: directory
+    owner: nginx
+    group: nginx
+    mode: u=rwX,g=rX,o=rX
+    recurse: yes
+
+- name: copy nginx.conf
+  copy:
+    src: mynginx.conf
+    dest: /etc/nginx/mynginx.conf
+    owner: root
+    group: root
+    mode: 0644
+    backup: yes
+  notify: restart nginx
+
+- name: copy www.linuxisfreak.in.conf
+  copy:
+    src: www.linuxisfreak.in.conf
+    dest: /etc/nginx/conf.d/www.linuxisfreak.in.conf
+    owner: root
+    group: root
+    mode: 0644
+    backup: yes
+  notify: restart nginx
+
+- name: copy www.linuxisfreak.in.ssl.conf
+  copy:
+    src: www.linuxisfreak.in.ssl.conf
+    dest: /etc/nginx/conf.d/www.linuxisfreak.in.ssl.conf
+    owner: root
+    group: root
+    mode: 0644
+    backup: yes
+  notify: restart nginx
+
+- name: open nginx http port
+  firewalld:
+    service: http
+    permanent: true
+    state: enabled
+
+- name: open nginx https port
+  firewalld:
+    service: https
+    permanent: true
+    state: enabled
+
+- name: docker service state
+  service:
+    name: docker
+    state: started
+    enabled: yes
+
+- meta: flush_handlers
+
+- name: ensure nginx container for www.linuxisfreak.in
+  docker_container:
+    name: nginx-www.linuxisfreak.in
+    image: nginx:alpine
+    state: started
+    published_ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - /opt/nginxconf:/etc/nginx:ro
+      - /etc/letsencrypt:/etc/letsencrypt:ro
+      - /var/www/www.linuxisfreak.in/html:/var/www/www.linuxisfreak.in/html:ro
+      - /var/log/opt/nginx:/var/log/nginx:rw
+    env:
+        mytestkey: mytestvalue

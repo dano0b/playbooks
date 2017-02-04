@@ -1,0 +1,67 @@
+---
+- name: add epel repo
+  yum_repository:
+    name: epel
+    description: EPEL YUM repo
+    baseurl: https://download.fedoraproject.org/pub/epel/$releasever/$basearch/
+    enabled: yes
+    gpgcheck: no
+
+- name: install quassel-core rpm
+  yum:
+    name: quassel-core
+    state: installed
+
+- name: create quassel group
+  group:
+    name: quassel
+
+- name: create quassel user
+  user:
+    name: quassel
+    group: quassel
+    shell: /sbin/nologin
+    home: /srv/quassel
+    createhome: yes
+
+- name: copy quassel service unit file
+  copy:
+    src: quassel.service
+    dest: /etc/systemd/system/quassel.service
+    backup: yes
+    owner: root
+    group: root
+    mode: 0640
+
+- name: start quassel core
+  service:
+    name: quassel
+    enabled: yes
+    state: started
+
+- name: create quassel groups
+  group:
+    name: "{{ item }}"
+  with_items:
+    - mobile
+    - workacc
+
+- name: create quassel user
+  user:
+    name: "{{ item }}"
+    group: "{{ item }}"
+    shell: /bin/bash
+    home: "/home/{{ item }}"
+    createhome: yes
+  with_items:
+    - mobile
+    - workacc
+
+- name: add auth keys for quassel user
+  authorized_key:
+    user: "{{ item }}"
+    state: present
+    key: "{{ lookup('file', '/home/dano0b/.ssh/{{ item }}.key.pub') }}"
+  with_items:
+    - mobile
+    - workacc

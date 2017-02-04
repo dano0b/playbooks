@@ -1,0 +1,39 @@
+---
+- name: PostgreSQL | Make sure the dependencies are installed
+  yum:
+    name: "{{ item }}"
+    state: present
+    update_cache: yes
+  with_items: ["python-psycopg2", "python-pycurl", "glibc-common"]
+
+- name: PostgreSQL | Install PostgreSQL
+  yum:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - "postgresql-server"
+    - "postgresql"
+    - "postgresql-contrib"
+
+- name: db init
+  command: postgresql-setup initdb
+  register: initdbResult
+
+- name: debug initdb
+  debug:
+    var: initdbResult
+
+- name: start postgresql service
+  service: 
+    name: postgresql
+    state: started
+
+- name: create postgres user
+  postgresql_user:
+    name: quassel
+    state: present
+
+- name: create postgres db
+  postgresql_db:
+    name: quassel
+    owner: quassel

@@ -1,0 +1,6 @@
+---
+
+- name: install quassel-client rpm
+  yum:
+    name: quassel-client
+    state: installed

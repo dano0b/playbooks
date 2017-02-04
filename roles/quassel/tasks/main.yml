@@ -1,0 +1,9 @@
+---
+
+- name: include core
+  include: core.yml
+  when: ansible_hostname == "6pat413"
+
+- name: include client
+  include: client.yml
+  when: ansible_hostname == "host1"

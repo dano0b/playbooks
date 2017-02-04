@@ -1,0 +1,6 @@
+---
+
+- name: ensure git package
+  yum:
+    name: git
+    state: installed
