@@ -1,0 +1,5 @@
+---
+vmAmount: 1
+vmName: labnode
+vmMemory: 512
+vmCPUAmount: 1

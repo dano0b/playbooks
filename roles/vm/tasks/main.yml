@@ -1,0 +1,7 @@
+---
+- name: include kvm specific tasks
+  include: kvm.yml
+  when: ansible_virtualization_type == "kvm"
+  with_sequence: count={{ vmAmount }}
+  loop_control:
+    loop_var: vmId

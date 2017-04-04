@@ -1,0 +1,23 @@
+---
+dependency:
+  name: galaxy
+driver:
+  name: vagrant
+vagrant:
+  platforms:
+    - name: centos7
+      box: centos/7
+  providers:
+    - name: libvirt
+      type: libvirt
+      options:
+        memory: 2048
+        cpus: 2
+        driver: kvm
+        video_type: vga
+  instances:
+    - name: vm
+      ansible_groups:
+        - group1
+verifier:
+  name: testinfra
