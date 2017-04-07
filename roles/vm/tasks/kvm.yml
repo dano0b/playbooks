@@ -22,7 +22,7 @@
     command: define
     xml: "{{ lookup('template', 'vm.xml.j2') }}"
 
-#- name: "start vm {{ vmName }}-{{ vmId }}"
+#- name: "start vm {{ vmName }}{{ vmId }}"
 #  virt:
-#    name: "{{ vmName }}-{{ vmId }}"
+#    name: "{{ vmName }}{{ vmId }}"
 #    state: running
