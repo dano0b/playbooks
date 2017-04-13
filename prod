@@ -1,5 +1,0 @@
-[local]
-localhost ansible_connection=local
-
-[webservers]
-linuxisfreak ansible_port=2022 ansible_host=www.linuxisfreak.in ansible_connection=ssh ansible_user=root
