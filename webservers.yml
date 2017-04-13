@@ -1,7 +1,6 @@
 ---
 - name: my static website
   hosts: webservers
-
   roles:
     - common
     - nginx
