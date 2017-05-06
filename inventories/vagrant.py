@@ -1,0 +1,1 @@
+/home/dano0b/repos/ansible/contrib/inventory/vagrant.py
