@@ -12,7 +12,15 @@
     user: vagrant
     state: present
     key: "{{ lookup('file', '/home/dano0b/.ssh/id_rsa.pub') }}"
+
 - name: set timezone
   timezone:
     name: Europe/Berlin
 
+- name: install cockpit
+  package:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - cockpit
+    - cockpit-docker
