@@ -1,0 +1,8 @@
+---
+- name: get worker join-token
+  command: docker swarm join-token -q worker
+  register: dockerJoinToken
+  delegate_to: "{{ swarmMaster }}"
+
+- name: join swarm cluster as worker
+  command: "docker swarm join --token {{ dockerJoinToken.stdout }} {{ swarmMaster }}:2377"
