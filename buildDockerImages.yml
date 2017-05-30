@@ -1,5 +1,5 @@
 ---
-- name: build my perl image
+- name: build my mojo image
   hosts: localhost
   gather_facts: false
   vars:
