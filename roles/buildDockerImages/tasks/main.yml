@@ -1,0 +1,32 @@
+---
+- name: create dockerBuildDir
+  file:
+    path: "{{ dockerBuildDir }}"
+    state: directory
+    owner: dano0b
+    group: dano0b
+    mode: 0750
+
+- name: copy dockerfile
+  template:
+    src: "{{ dockerFile }}"
+    dest: "{{ dockerBuildDir }}/Dockerfile"
+    owner: dano0b
+    group: dano0b
+    mode: 0640
+
+- name: build docker image
+  docker_image:
+    path: "{{ dockerBuildDir }}"
+    name: "{{ dockerImageName }}"
+    state: present
+    force: yes
+    buildargs: "{{ dockerBuildArgs |default(omit) }}"
+    tag: "{{ dockerImageTag |default('latest') }}"
+    repository: "{{ dockerImageRepo |default(omit) }}"
+    push: "{{ dockerImagePush |default('no') }}"
+
+- name: remove dockerBuildDir
+  file:
+    path: "{{ dockerBuildDir }}"
+    state: absent
