@@ -1,0 +1,20 @@
+- hosts: local
+  connection: local
+  gather_facts: False
+  become: false
+  tasks:
+    - name: Provision a set of instances
+      ec2:
+        key_name: id_rsa
+        region: eu-west-1
+        group_id: sg-ac5b6cd5
+        vpc_subnet_id: subnet-004a4958
+        instance_type: t1.micro
+        image: "ami-d1c0c4b7"
+        wait: true
+        exact_count: 2
+        count_tag:
+           Name: Demo
+        instance_tags:
+           Name: Demo
+      register: ec2
