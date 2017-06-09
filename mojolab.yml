@@ -1,0 +1,15 @@
+---
+- name: build my mojo images
+  hosts: localhost
+  gather_facts: false
+  vars:
+    dockerBuildSourceImage: "alpine"
+    dockerBuildSourceImageVersion: "3.6"
+    dockerImageTag: chatdemo
+    dockerBuildDir: /home/dano0b/ansibleDockerBuildDir
+    dockerFileWebsocketServer: dockerfile-websocketserver.j2
+    dockerFileNginxStatic: dockerfile-nginxstatic.j2
+    dockerImageNameWebsocketServer: websocketserver
+    dockerImageNameNginxStatic: nginxstatic
+  roles:
+    - mojolab

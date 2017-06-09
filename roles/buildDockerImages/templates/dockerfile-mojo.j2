@@ -1,4 +1,0 @@
-FROM {{ dockerBuildSourceImage }}:{{ dockerBuildSourceImageVersion }}
-ENV PERL_MM_USE_DEFAULT 1
-RUN apk add --no-cache perl perl-mojolicious make less \
-&& echo "install App::cpanminus" | perl -MCPAN -e shell

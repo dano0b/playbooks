@@ -1,0 +1,13 @@
+FROM alpine:latest
+
+ENV PERL_MM_USE_DEFAULT 1
+RUN apk add --no-cache perl perl-mojolicious perl-datetime make less \
+&& echo "install App::cpanminus" | perl -MCPAN -e shell
+
+EXPOSE 8080
+
+COPY app.pl /srv/app.pl
+
+ENV MOJO_HOME=/srv
+
+ENTRYPOINT ["hypnotoad", "-f", "/srv/app.pl"]

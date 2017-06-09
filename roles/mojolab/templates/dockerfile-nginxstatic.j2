@@ -1,0 +1,10 @@
+FROM nginx:alpine
+
+RUN rm -rf /usr/share/nginx/html/* && mkdir /usr/share/nginx/html/js
+COPY ws.js /usr/share/nginx/html/js/ws.js
+
+EXPOSE 80
+
+STOPSIGNAL SIGTERM
+
+ENTRYPOINT ["nginx", "-g", "daemon off;"]
