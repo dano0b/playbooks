@@ -24,11 +24,6 @@ websocket '/echo' => sub {
             }});
         }
     });
-
-    $self->on(finish => sub {
-        app->log->debug('Client disconnected');
-        delete $clients->{$id};
-    });
 };
 
 app->start;
