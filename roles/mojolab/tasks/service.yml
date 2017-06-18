@@ -1,0 +1,24 @@
+---
+- name: start the lab
+  docker_service:
+    state: present
+    project_name: mojo
+    definition:
+      version: '2'
+      services:
+#        postgres:
+#          image: "{{ dockerImageNamePostgres }}:{{ dockerImageTag }}"
+#        redis:
+#          image: "{{ dockerImageNameRedis }}:{{ dockerImageTag }}"
+        static:
+          image: "{{ dockerImageNameNginxStatic }}:{{ dockerImageTag }}"
+          ports:
+            - "127.0.0.1:80:80"
+        websocket:
+          image: "{{ dockerImageNameWebsocketServer }}:{{ dockerImageTag }}"
+          ports:
+            - "127.0.0.1:8080:8080"
+  register: output
+
+- debug:
+    var: output

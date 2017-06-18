@@ -1,0 +1,83 @@
+---
+- name: create dockerBuildDir
+  file:
+    path: "{{ dockerBuildDir }}"
+    state: directory
+    owner: dano0b
+    group: dano0b
+    mode: 0750
+  tags:
+    - always
+
+- name: add websocket server app
+  copy:
+    src: app.pl
+    dest: "{{ dockerBuildDir }}/app.pl"
+    owner: root
+    group: root
+    mode: 0750
+  tags:
+    - websocketServer
+
+- name: copy websocketServer dockerfile
+  template:
+    src: "{{ dockerFileWebsocketServer }}"
+    dest: "{{ dockerBuildDir }}/Dockerfile"
+    owner: dano0b
+    group: dano0b
+    mode: 0640
+  tags:
+    - websocketServer
+
+- name: build websocket server docker image
+  docker_image:
+    path: "{{ dockerBuildDir }}"
+    name: "{{ dockerImageNameWebsocketServer }}"
+    state: present
+    force: yes
+    buildargs: "{{ dockerBuildArgs |default(omit) }}"
+    tag: "{{ dockerImageTag |default('latest') }}"
+    repository: "{{ dockerImageRepo |default(omit) }}"
+    push: "{{ dockerImagePush |default('no') }}"
+  tags:
+    - websocketServer
+
+- name: add websocket js
+  copy:
+    src: ws.js
+    dest: "{{ dockerBuildDir }}/ws.js"
+    owner: root
+    group: root
+    mode: 0644
+  tags:
+    - nginxStatic
+
+- name: copy nginxStatic dockerfile
+  template:
+    src: "{{ dockerFileNginxStatic }}"
+    dest: "{{ dockerBuildDir }}/Dockerfile"
+    owner: dano0b
+    group: dano0b
+    mode: 0640
+  tags:
+    - nginxStatic
+
+- name: build nginxStatic server docker image
+  docker_image:
+    path: "{{ dockerBuildDir }}"
+    name: "{{ dockerImageNameNginxStatic }}"
+    state: present
+    force: yes
+    buildargs: "{{ dockerBuildArgs |default(omit) }}"
+    tag: "{{ dockerImageTag |default('latest') }}"
+    repository: "{{ dockerImageRepo |default(omit) }}"
+    push: "{{ dockerImagePush |default('no') }}"
+  tags:
+    - nginxStatic
+
+- name: remove dockerBuildDir
+  file:
+    path: "{{ dockerBuildDir }}"
+    state: absent
+  tags:
+    - always
