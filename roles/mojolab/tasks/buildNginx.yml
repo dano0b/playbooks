@@ -6,8 +6,6 @@
     owner: root
     group: root
     mode: 0644
-  tags:
-    - nginxStatic
 
 - name: copy nginxStatic dockerfile
   template:
@@ -16,8 +14,6 @@
     owner: dano0b
     group: dano0b
     mode: 0640
-  tags:
-    - nginxStatic
 
 - name: build nginxStatic server docker image
   docker_image:
@@ -29,5 +25,3 @@
     tag: "{{ dockerImageTag |default('latest') }}"
     repository: "{{ dockerImageRepo |default(omit) }}"
     push: "{{ dockerImagePush |default('no') }}"
-  tags:
-    - nginxStatic
