@@ -1,8 +1,30 @@
 ---
-- name: include build.yml
-  include: build.yml
+- name: create dockerBuildDir
+  file:
+    path: "{{ dockerBuildDir }}"
+    state: directory
+    owner: dano0b
+    group: dano0b
+    mode: 0750
   tags:
-    - build
+    - always
+
+- name: include buildMojo.yml
+  include: buildMojo.yml
+  tags:
+    - buildMojo
+
+- name: include buildNginx.yml
+  include: buildNginx.yml
+  tags:
+    - buildNginx
+
+- name: remove dockerBuildDir
+  file:
+    path: "{{ dockerBuildDir }}"
+    state: absent
+  tags:
+    - always
 
 - name: include service.yml
   include: service.yml

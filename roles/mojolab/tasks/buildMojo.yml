@@ -1,0 +1,27 @@
+---
+- name: add websocket server app
+  copy:
+    src: app.pl
+    dest: "{{ dockerBuildDir }}/app.pl"
+    owner: root
+    group: root
+    mode: 0750
+
+- name: copy websocketServer dockerfile
+  template:
+    src: "{{ dockerFileWebsocketServer }}"
+    dest: "{{ dockerBuildDir }}/Dockerfile"
+    owner: dano0b
+    group: dano0b
+    mode: 0640
+
+- name: build websocket server docker image
+  docker_image:
+    path: "{{ dockerBuildDir }}"
+    name: "{{ dockerImageNameWebsocketServer }}"
+    state: present
+    force: yes
+    buildargs: "{{ dockerBuildArgs |default(omit) }}"
+    tag: "{{ dockerImageTag |default('latest') }}"
+    repository: "{{ dockerImageRepo |default(omit) }}"
+    push: "{{ dockerImagePush |default('no') }}"

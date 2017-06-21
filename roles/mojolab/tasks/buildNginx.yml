@@ -1,0 +1,33 @@
+---
+- name: add websocket js
+  copy:
+    src: ws.js
+    dest: "{{ dockerBuildDir }}/ws.js"
+    owner: root
+    group: root
+    mode: 0644
+  tags:
+    - nginxStatic
+
+- name: copy nginxStatic dockerfile
+  template:
+    src: "{{ dockerFileNginxStatic }}"
+    dest: "{{ dockerBuildDir }}/Dockerfile"
+    owner: dano0b
+    group: dano0b
+    mode: 0640
+  tags:
+    - nginxStatic
+
+- name: build nginxStatic server docker image
+  docker_image:
+    path: "{{ dockerBuildDir }}"
+    name: "{{ dockerImageNameNginxStatic }}"
+    state: present
+    force: yes
+    buildargs: "{{ dockerBuildArgs |default(omit) }}"
+    tag: "{{ dockerImageTag |default('latest') }}"
+    repository: "{{ dockerImageRepo |default(omit) }}"
+    push: "{{ dockerImagePush |default('no') }}"
+  tags:
+    - nginxStatic
