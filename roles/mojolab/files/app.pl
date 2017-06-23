@@ -3,6 +3,11 @@ use utf8;
 use Mojolicious::Lite;
 use Mojo::IOLoop;
 use DateTime;
+use Mojo::Log;
+
+my $log = Mojo::Log->new;
+
+app->config(hypnotoad => {listen => ['http://*:80']});
 
 get '/' => 'index';
 
@@ -42,7 +47,7 @@ __DATA__
       type="text/javascript"
       src="http://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js">
     </script>
-    <script type="text/javascript" src="http://localhost/js/ws.js"></script>
+    <script type="text/javascript" src="/js/ws.js"></script>
     <style type="text/css">
       textarea {
           width: 40em;

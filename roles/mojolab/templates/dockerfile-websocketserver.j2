@@ -2,11 +2,13 @@ FROM alpine:latest
 
 ENV PERL_MM_USE_DEFAULT 1
 RUN apk add --no-cache perl perl-mojolicious perl-datetime make less \
-&& echo "install App::cpanminus" | perl -MCPAN -e shell
+&& echo "install App::cpanminus" | perl -MCPAN -e shell \
+&& mkdir -p /srv/public/js
 
-EXPOSE 8080
+EXPOSE 80
 
 COPY app.pl /srv/app.pl
+COPY ws.js /srv/public/js/ws.js
 
 ENV MOJO_HOME=/srv
 

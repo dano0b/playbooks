@@ -4,15 +4,15 @@ $(function () {
   var log = function (text) {
     $('#log').val( $('#log').val() + text + "\n");
   };
-  
-  var ws = new WebSocket('ws://localhost:8080/echo');
+
+  var ws = new WebSocket('ws://localhost:80/echo');
   ws.onopen = function () {
     log('Connection opened');
   };
-  
+
   ws.onmessage = function (msg) {
     var res = JSON.parse(msg.data);
-    log('just a simple pushed date: ' + res.hms ); 
+    log('just a simple pushed date: ' + res.hms );
   };
 
 $('#msg').keydown(function (e) {

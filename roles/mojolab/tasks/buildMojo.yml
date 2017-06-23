@@ -1,4 +1,12 @@
 ---
+- name: add websocket js
+  copy:
+    src: ws.js
+    dest: "{{ dockerBuildDir }}/ws.js"
+    owner: root
+    group: root
+    mode: 0644
+    
 - name: add websocket server app
   copy:
     src: app.pl
