@@ -5,7 +5,7 @@ $(function () {
     $('#log').val( $('#log').val() + text + "\n");
   };
 
-  var ws = new WebSocket('ws://localhost:80/echo');
+  var ws = new WebSocket("ws://" + location.host + "/echo");
   ws.onopen = function () {
     log('Connection opened');
   };
