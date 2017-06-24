@@ -90,6 +90,10 @@
   docker_container:
     name: nginx-www.linuxisfreak.in
     image: nginx:alpine
+    pull: yes
+    recreate: yes
+    restart: yes
+    restart_policy: always
     state: started
     published_ports:
       - 80:80
