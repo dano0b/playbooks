@@ -14,11 +14,6 @@
   tags:
     - buildMojo
 
-#- name: include buildNginx.yml
-#  include: buildNginx.yml
-#  tags:
-#    - buildNginx
-
 - name: remove dockerBuildDir
   file:
     path: "{{ dockerBuildDir }}"
