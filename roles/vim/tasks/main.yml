@@ -1,5 +1,4 @@
 ---
-
 - name: include centos packages
   include: centos.yml
   when:
@@ -55,7 +54,6 @@
     repo: "https://github.com/{{ item.githubUser }}/{{ item.githubRepo }}.git"
     dest: "{{ roleHomePath }}/.vim/bundle/{{ item.githubRepo }}"
   with_items:
-    - { githubUser: 'vim-syntastic', githubRepo: 'syntastic' }
     - { githubUser: 'scrooloose' , githubRepo: 'nerdtree' }
     - { githubUser: 'majutsushi' , githubRepo: 'tagbar' }
     - { githubUser: 'chase' , githubRepo: 'vim-ansible-yaml' }
@@ -63,4 +61,3 @@
     - { githubUser: 'elzr' , githubRepo: 'vim-json' }
     - { githubUser: 'plasticboy' , githubRepo: 'vim-markdown' }
     - { githubUser: 'sukima' , githubRepo: 'xmledit' }
-

@@ -1,20 +1,29 @@
 " contents of minimal .vimrc
+set nocompatible
+filetype off
+
+set rtp+=~/.vim/bundle/Vundle.vim
+call vundle#begin()
+
+Plugin 'VundleVim/Vundle.vim'
+Plugin 'tpope/vim-fugitive'
+Plugin 'w0rp/ale'
+Plugin 'vim-airline/vim-airline'
+Plugin 'vim-airline/vim-airline-themes'
+
+call vundle#end()
+
+let g:airline#extensions#tabline#enabled = 1
+let g:airline#extensions#ale#enabled = 1
+
 execute pathogen#infect()
 syntax on
 filetype plugin indent on
-set statusline+=%#warningmsg#
-set statusline+=%{SyntasticStatuslineFlag()}
-set statusline+=%*
 set listchars=tab:→\ ,trail:·
 set modeline
 
-let g:syntastic_always_populate_loc_list = 1
-let g:syntastic_auto_loc_list = 1
-let g:syntastic_check_on_open = 1
-let g:syntastic_check_on_wq = 0
 map <silent> <F3> :NERDTreeToggle<CR>
 map <silent> <F4> :set invnumber<CR>
-map <silent> <F6> :SyntasticToggleMode<CR>
 map <silent> <F8> :set list!<CR>
 if has("gui_running")
   if has("gui_gtk2")
@@ -62,8 +71,6 @@ endfunction
 
 let pyindent_nested_paren="&sw*2"
 let pyindent_open_paren="&sw*2"
-
-let g:syntastic_python_pylint_rcfile='~/pylintrc' 
 
 let &t_SI .= "\<Esc>[?2004h"
 let &t_EI .= "\<Esc>[?2004l"
