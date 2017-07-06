@@ -14,4 +14,4 @@ install:
   - ansible --version
 
 script:
-  - ansible-playbook shell.yml -i inventories/hosts.yml
+  - ansible-playbook shell.yml -i testInventory.yml
