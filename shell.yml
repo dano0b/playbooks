@@ -1,0 +1,6 @@
+---
+- name: setup my shell env
+  hosts: local
+  become: false
+  roles:
+    - dano0b.shell
