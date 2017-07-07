@@ -11,9 +11,9 @@ addons:
     - python-pip
 
 install:
-  - pip install ansible
-  - ansible --version
-  - sudo echo /usr/bin/zsh >> /etc/shells
+  - "pip install ansible"
+  - "ansible --version"
+  - "sudo apt-get install -y zsh"
 
 script:
   - ansible-playbook shell.yml -i testInventory.yml
