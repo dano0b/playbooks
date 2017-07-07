@@ -81,7 +81,7 @@
     msg: "zsh has to be version 4.3.9 or more recent, yours is: {{ zshVersion.stdout }}"
 
 - name: install the latest oh-my-zsh
-  shell: sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
+  shell: sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh | sed -n '/chsh/!p' | sh)"
   register: ohmyzshStatus
   changed_when: '"You already have Oh My Zsh installed." not in ohmyzshStatus.stdout'
 
