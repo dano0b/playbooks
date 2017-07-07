@@ -83,3 +83,7 @@ function! XTermPasteBegin()
   endfunction
 
 set tabstop=4 shiftwidth=4 expandtab
+
+set laststatus=2
+set showtabline=2
+set noshowmode
