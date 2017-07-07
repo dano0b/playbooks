@@ -1,0 +1,25 @@
+---
+- name: install python-pip
+  package:
+    name: "{{ item }}"
+    state: present
+  become: true
+  with_items:
+    - python-pip
+
+- name: install virtualenv using pip
+  pip:
+    name: virtualenv
+    state: present
+  become: true
+
+- name: prepare requirements.txt
+  copy:
+    src: requirements.txt
+    dest: /tmp/requirements.txt
+
+- name: create python27 virtualenv
+  pip:
+    requirements: /tmp/requirements.txt
+    virtualenv: ~/python27
+    virtualenv_python: python2.7

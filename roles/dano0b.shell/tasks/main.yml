@@ -10,137 +10,20 @@
     - curl
     - socat
 
-- name: install powerline related modules
-  pip:
-    name: "{{ item }}"
-    state: present
-  with_items:
-    - psutil
-    - powerline-status
+- name: include python related tasks
+  include: python.yml
+  tags:
+    - python
+    - pip
+    - virtualenv
 
-- name: generate a random runtime number
-  set_fact:
-    r: "{{ 100000 | random }}"
+- name: include powerline related tasks
+  include: powerline.yml
+  tags:
+    - powerline
 
-- name: check for powerline fonts
-  find:
-    paths: "~/.local/share/fonts"
-    patterns: "*Powerline*"
-  register: powerlineFonts
-
-- name: create font config directory
-  file:
-    path: ~/.config/fontconfig/conf.d
-    state: directory
-
-- name: create font directory
-  file:
-    path: ~/.local/share/fonts
-    state: directory
-
-- name: download powerline fontconfig
-  get_url:
-    url: https://github.com/powerline/powerline/raw/develop/font/10-powerline-symbols.conf
-    dest: ~/.config/fontconfig/conf.d/10-powerline-symbols.conf
-
-- name: download powerline symbol font
-  get_url:
-    url: https://github.com/powerline/powerline/raw/develop/font/PowerlineSymbols.otf
-    dest: ~/.local/share/fonts/PowerlineSymbols.otf
-  register: powerlineSymbolFont
-
-- name: update font cache if font changed
-  command: fc-cache -vf ~/.local/share/fonts/
-  when: powerlineSymbolFont.changed
-
-- name: download more powerline fonts
-  git:
-    repo: https://github.com/powerline/fonts.git
-    dest: "/tmp/powerline.fonts_{{ r }}"
-  when: powerlineFonts.matched == 0
-
-- name: install more powerline fonts
-  command: "/tmp/powerline.fonts_{{ r }}/install.sh"
-  when: powerlineFonts.matched == 0
-
-- name: remove powerline download directory
-  file:
-    path: "/tmp/powerline.fonts_{{ r }}"
-    state: absent
-  when: powerlineFonts.matched == 0
-
-- name: get zsh version
-  shell: zsh --version|cut -d" " -f2
-  register: zshVersion
-  changed_when: false
-
-- name: check minimum zsh version (4.3.9)
-  assert:
-    that:
-      - zshVersion.stdout | version_compare('4.3.9', '>=')
-    msg: "zsh has to be version 4.3.9 or more recent, yours is: {{ zshVersion.stdout }}"
-
-- name: install the latest oh-my-zsh
-  shell: curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh | sed -n '/chsh -s/!p' | sh
-  register: ohmyzshStatus
-  changed_when: '"You already have Oh My Zsh installed." not in ohmyzshStatus.stdout'
-
-- name: set agnoster theme
-  lineinfile:
-    path: ~/.zshrc
-    regexp: '^ZSH_THEME='
-    line: 'ZSH_THEME=agnoster'
-    state: present
-
-- name: get powerline-status location
-  shell: pip show powerline-status|fgrep Location|cut -d" " -f2
-  register: powerlineStatusLocation
-  changed_when: false
-
-- name: set default user
-  lineinfile:
-    path: ~/.zshrc
-    regexp: "^DEFAULT_USER={{ lookup('env','USER') }}"
-    insertafter: '^# User configuration'
-    line: "DEFAULT_USER={{ lookup('env','USER') }}"
-    state: present
-
-- name: change prompt context for the default user
-  lineinfile:
-    path: ~/.zshrc
-    regexp: '^prompt_context'
-    insertafter: "^DEFAULT_USER={{ lookup('env','USER') }}"
-    line: 'prompt_context(){}'
-    state: present
-
-- name: add zsh powerline-status bindings
-  lineinfile:
-    path: ~/.zshrc
-    regexp: "^. {{ powerlineStatusLocation.stdout }}/powerline/bindings/zsh/powerline.zsh"
-    insertafter: '^prompt_context(){}'
-    line: ". {{ powerlineStatusLocation.stdout }}/powerline/bindings/zsh/powerline.zsh"
-    state: present
-
-- name: add powerline scripts location to PATH
-  lineinfile:
-    path: ~/.zshrc
-    regexp: "{{ powerlineStatusLocation.stdout }}/../../../bin:"
-    insertafter: '^# export PATH='
-    line: "export PATH=$HOME/bin:{{ powerlineStatusLocation.stdout }}/../../../bin:$PATH"
-    state: present
-
-- name: enable oh-my-zsh plugins
-  lineinfile:
-    path: ~/.zshrc
-    regexp: "^plugins="
-    insertafter: '^plugins='
-    line: "plugins=(git colored-man-pages colorize)"
-    state: present
-
-- name: change history date format to yyy-mm-dd
-  lineinfile:
-    path: ~/.zshrc
-    regexp: "^HIST_STAMPS="
-    insertafter: '^# HIST_STAMPS='
-    line: 'HIST_STAMPS="yyyy-mm-dd"'
-    state: present
+- name: include zsh related tasks
+  include: zsh.yml
+  tags:
+    - zsh
+    - oh-my-zsh

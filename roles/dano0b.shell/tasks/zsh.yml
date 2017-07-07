@@ -1,0 +1,90 @@
+---
+- name: get zsh version
+  shell: zsh --version|cut -d" " -f2
+  register: zshVersion
+  changed_when: false
+
+- name: check minimum zsh version (4.3.9)
+  assert:
+    that:
+      - zshVersion.stdout | version_compare('4.3.9', '>=')
+    msg: "zsh has to be version 4.3.9 or more recent, yours is: {{ zshVersion.stdout }}"
+
+- name: install the latest oh-my-zsh
+  shell: curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh | sed -n '/chsh -s/!p' | sh
+  register: ohmyzshStatus
+  changed_when: '"You already have Oh My Zsh installed." not in ohmyzshStatus.stdout'
+
+- name: set agnoster theme
+  lineinfile:
+    path: ~/.zshrc
+    regexp: '^ZSH_THEME='
+    line: 'ZSH_THEME=agnoster'
+    state: present
+
+- name: get powerline-status location
+  shell: pip show powerline-status|fgrep Location|cut -d" " -f2
+  register: powerlineStatusLocation
+  changed_when: false
+
+- name: source python27 virtualenv
+  lineinfile:
+    path: ~/.zshrc
+    regexp: "/python27/bin/activate"
+    insertafter: '^# User configuration'
+    line: ". ~/python27/bin/activate"
+    state: present
+
+- name: set default user
+  lineinfile:
+    path: ~/.zshrc
+    regexp: "^DEFAULT_USER={{ lookup('env','USER') }}"
+    insertafter: '/python27/bin/activate'
+    line: "DEFAULT_USER={{ lookup('env','USER') }}"
+    state: present
+
+- name: change prompt context for the default user
+  lineinfile:
+    path: ~/.zshrc
+    regexp: '^prompt_context'
+    insertafter: "^DEFAULT_USER={{ lookup('env','USER') }}"
+    line: 'prompt_context(){}'
+    state: present
+
+- name: add zsh powerline-status bindings
+  lineinfile:
+    path: ~/.zshrc
+    regexp: "^. {{ powerlineStatusLocation.stdout }}/powerline/bindings/zsh/powerline.zsh"
+    insertafter: '^prompt_context(){}'
+    line: ". {{ powerlineStatusLocation.stdout }}/powerline/bindings/zsh/powerline.zsh"
+    state: present
+
+- name: add powerline scripts location to PATH
+  lineinfile:
+    path: ~/.zshrc
+    regexp: "{{ powerlineStatusLocation.stdout }}/../../../bin:"
+    insertafter: '^# export PATH='
+    line: "export PATH=$HOME/bin:{{ powerlineStatusLocation.stdout }}/../../../bin:$PATH"
+    state: present
+
+- name: enable oh-my-zsh plugins
+  lineinfile:
+    path: ~/.zshrc
+    regexp: "^plugins="
+    insertafter: '^plugins='
+    line: "plugins=(git git-prompt git-remote-branch colored-man-pages colorize)"
+    state: present
+
+- name: change history date format to yyyy-mm-dd
+  lineinfile:
+    path: ~/.zshrc
+    regexp: "^HIST_STAMPS="
+    insertafter: '^# HIST_STAMPS='
+    line: 'HIST_STAMPS="yyyy-mm-dd"'
+    state: present
+
+- name: unarchive http://ethanschoonover.com/solarized/files/solarized.zip
+  unarchive:
+    src: http://ethanschoonover.com/solarized/files/solarized.zip
+    dest: ~/
+    remote_src: True

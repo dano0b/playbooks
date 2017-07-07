@@ -1,0 +1,79 @@
+---
+- name: install powerline related modules
+  pip:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - psutil
+    - powerline-status
+    - powerline-gitstatus
+
+- name: generate a random runtime number
+  set_fact:
+    r: "{{ 100000 | random }}"
+
+- name: check for powerline fonts
+  find:
+    paths: "~/.local/share/fonts"
+    patterns: "*Powerline*"
+  register: powerlineFonts
+
+- name: create font config directory
+  file:
+    path: ~/.config/fontconfig/conf.d
+    state: directory
+
+- name: create font directory
+  file:
+    path: ~/.local/share/fonts
+    state: directory
+
+- name: download powerline fontconfig
+  get_url:
+    url: https://github.com/powerline/powerline/raw/develop/font/10-powerline-symbols.conf
+    dest: ~/.config/fontconfig/conf.d/10-powerline-symbols.conf
+
+- name: download powerline symbol font
+  get_url:
+    url: https://github.com/powerline/powerline/raw/develop/font/PowerlineSymbols.otf
+    dest: ~/.local/share/fonts/PowerlineSymbols.otf
+  register: powerlineSymbolFont
+
+- name: update font cache if font changed
+  command: fc-cache -vf ~/.local/share/fonts/
+  when: powerlineSymbolFont.changed
+
+- name: download more powerline fonts
+  git:
+    repo: https://github.com/powerline/fonts.git
+    dest: "/tmp/powerline.fonts_{{ r }}"
+  when: powerlineFonts.matched == 0
+
+- name: install more powerline fonts
+  command: "/tmp/powerline.fonts_{{ r }}/install.sh"
+  when: powerlineFonts.matched == 0
+
+- name: remove powerline download directory
+  file:
+    path: "/tmp/powerline.fonts_{{ r }}"
+    state: absent
+  when: powerlineFonts.matched == 0
+
+- name: create powerline config directories
+  file:
+    path: "{{ item }}"
+    state: directory
+  with_items:
+    - ~/.config/powerline
+    - ~/.config/powerline/colorschemes
+    - ~/.config/powerline/themes/shell
+
+- name: create powerline configuration files
+  copy:
+    src: ".config/powerline/{{ item }}"
+    dest: "~/.config/powerline/{{ item }}"
+    backup: yes
+  with_items:
+    - config.json
+    - colorschemes/default.json
+    - themes/shell/default.json
