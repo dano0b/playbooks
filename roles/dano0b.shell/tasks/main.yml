@@ -81,7 +81,7 @@
     msg: "zsh has to be version 4.3.9 or more recent, yours is: {{ zshVersion.stdout }}"
 
 - name: install the latest oh-my-zsh
-  shell: sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh | sed -n '/chsh/!p' | sh)"
+  shell: curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh | sed -n '/chsh -s/!p' | sh
   register: ohmyzshStatus
   changed_when: '"You already have Oh My Zsh installed." not in ohmyzshStatus.stdout'
 
@@ -96,10 +96,6 @@
   shell: pip show powerline-status|fgrep Location|cut -d" " -f2
   register: powerlineStatusLocation
   changed_when: false
-
-- name: debug powerlineStatusLocation
-  debug:
-    var: powerlineStatusLocation
 
 - name: set default user
   lineinfile:
@@ -131,4 +127,20 @@
     regexp: "{{ powerlineStatusLocation.stdout }}/../../../bin:"
     insertafter: '^# export PATH='
     line: "export PATH=$HOME/bin:{{ powerlineStatusLocation.stdout }}/../../../bin:$PATH"
+    state: present
+
+- name: enable oh-my-zsh plugins
+  lineinfile:
+    path: ~/.zshrc
+    regexp: "^plugins="
+    insertafter: '^plugins='
+    line: "plugins=(git colored-man-pages colorize)"
+    state: present
+
+- name: change history date format to yyy-mm-dd
+  lineinfile:
+    path: ~/.zshrc
+    regexp: "^HIST_STAMPS="
+    insertafter: '^# HIST_STAMPS='
+    line: 'HIST_STAMPS="yyyy-mm-dd"'
     state: present
