@@ -13,7 +13,7 @@ addons:
 install:
   - pip install ansible
   - ansible --version
-  - echo  /usr/bin/zsh >> /etc/shells
+  - sudo echo /usr/bin/zsh >> /etc/shells
 
 script:
   - ansible-playbook shell.yml -i testInventory.yml
