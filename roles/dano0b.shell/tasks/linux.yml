@@ -1,0 +1,11 @@
+---
+- name: install required packages
+  package:
+    name: "{{ item }}"
+    state: present
+  become: true
+  with_items:
+    - zsh
+    - git
+    - curl
+    - socat
