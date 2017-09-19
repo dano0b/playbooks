@@ -38,6 +38,7 @@
     url: https://github.com/powerline/powerline/raw/develop/font/PowerlineSymbols.otf
     dest: ~/.local/share/fonts/PowerlineSymbols.otf
   register: powerlineSymbolFont
+  when: powerlineFonts.matched == 0
 
 - name: update font cache if font changed
   command: fc-cache -vf ~/.local/share/fonts/
