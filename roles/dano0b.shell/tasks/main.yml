@@ -1,14 +1,19 @@
 ---
-- name: install required packages
-  package:
-    name: "{{ item }}"
-    state: present
-  become: true
-  with_items:
+- name: include linux package tasks
+  include: linux.yml
+  tags:
+    - package
     - zsh
-    - git
-    - curl
-    - socat
+  when:
+    - ansible_distribution != "MacOSX"
+
+- name: include mac package tasks
+  include: MacOSX.yml
+  tags:
+    - package
+    - zsh
+  when:
+    - ansible_distribution == "MacOSX"
 
 - name: include python related tasks
   include: python.yml
@@ -19,6 +24,8 @@
 
 - name: include powerline related tasks
   include: powerline.yml
+  when:
+    - ansible_distribution != "MacOSX"
   tags:
     - powerline
 
