@@ -1,6 +1,6 @@
 ---
 - name: include linux package tasks
-  include: linux.yml
+  import_tasks: linux.yml
   tags:
     - package
     - zsh
@@ -8,7 +8,7 @@
     - ansible_distribution != "MacOSX"
 
 - name: include mac package tasks
-  include: MacOSX.yml
+  import_tasks: MacOSX.yml
   tags:
     - package
     - zsh
@@ -16,21 +16,21 @@
     - ansible_distribution == "MacOSX"
 
 - name: include python related tasks
-  include: python.yml
+  import_tasks: python.yml
   tags:
     - python
     - pip
     - virtualenv
 
 - name: include powerline related tasks
-  include: powerline.yml
+  import_tasks: powerline.yml
   when:
     - ansible_distribution != "MacOSX"
   tags:
     - powerline
 
 - name: include zsh related tasks
-  include: zsh.yml
+  import_tasks: zsh.yml
   tags:
     - zsh
     - oh-my-zsh
