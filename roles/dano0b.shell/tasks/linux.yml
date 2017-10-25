@@ -10,3 +10,4 @@
     - curl
     - socat
     - python-pip
+    - unzip
