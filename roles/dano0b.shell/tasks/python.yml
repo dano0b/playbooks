@@ -1,17 +1,8 @@
 ---
-- name: install python-pip
-  package:
-    name: "{{ item }}"
-    state: present
-  become: true
-  with_items:
-    - python-pip
-
 - name: install virtualenv using pip
   pip:
     name: virtualenv
     state: present
-  become: true
 
 - name: prepare requirements.txt
   copy:
