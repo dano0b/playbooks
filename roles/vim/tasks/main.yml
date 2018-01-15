@@ -16,15 +16,6 @@
     name: "{{ roleGroupName }}"
     state: present
 
-- name: ensure user
-  user:
-    name: "{{ roleUserName }}"
-    group: "{{ roleGroupName }}"
-    state: present
-    createhome: yes
-    home: "{{ roleHomePath }}"
-    shell: /bin/bash
-
 - name: ensure vim folder
   file:
     state: directory
@@ -44,20 +35,19 @@
     owner: "{{ roleUserName }}"
     group: "{{ roleGroupName }}"
     mode: "{{ item.destMode }}"
-    backup: yes
+    backup: "yes"
   with_items:
-    - { src: 'pathogen.vim', destPath: '{{ roleHomePath }}/.vim/autoload/', destMode: '0640' }
-    - { src: '.vimrc', destPath: '{{ roleHomePath }}/', destMode: '0640' }
+    - {src: 'pathogen.vim', destPath: '{{ roleHomePath }}/.vim/autoload/', destMode: '0640'}
+    - {src: '.vimrc', destPath: '{{ roleHomePath }}/', destMode: '0640'}
 
 - name: checkout vim plugins
   git:
     repo: "https://github.com/{{ item.githubUser }}/{{ item.githubRepo }}.git"
     dest: "{{ roleHomePath }}/.vim/bundle/{{ item.githubRepo }}"
   with_items:
-    - { githubUser: 'scrooloose' , githubRepo: 'nerdtree' }
-    - { githubUser: 'majutsushi' , githubRepo: 'tagbar' }
-    - { githubUser: 'chase' , githubRepo: 'vim-ansible-yaml' }
-    - { githubUser: 'mitsuhiko' , githubRepo: 'vim-jinja' }
-    - { githubUser: 'elzr' , githubRepo: 'vim-json' }
-    - { githubUser: 'plasticboy' , githubRepo: 'vim-markdown' }
-    - { githubUser: 'sukima' , githubRepo: 'xmledit' }
+    - {githubUser: 'scrooloose', githubRepo: 'nerdtree'}
+    - {githubUser: 'majutsushi', githubRepo: 'tagbar'}
+    - {githubUser: 'chase', githubRepo: 'vim-ansible-yaml'}
+    - {githubUser: 'mitsuhiko', githubRepo: 'vim-jinja'}
+    - {githubUser: 'elzr', githubRepo: 'vim-json'}
+    - {githubUser: 'sukima', githubRepo: 'xmledit'}

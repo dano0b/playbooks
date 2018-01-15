@@ -17,7 +17,7 @@
 
 - name: set agnoster theme
   lineinfile:
-    path: ~/.zshrc
+    dest: ~/.zshrc
     regexp: '^ZSH_THEME='
     line: 'ZSH_THEME=agnoster'
     state: present
@@ -29,7 +29,7 @@
 
 - name: source python27 virtualenv
   lineinfile:
-    path: ~/.zshrc
+    dest: ~/.zshrc
     regexp: "/python27/bin/activate"
     insertafter: '^# User configuration'
     line: ". ~/python27/bin/activate"
@@ -37,7 +37,7 @@
 
 - name: set default user
   lineinfile:
-    path: ~/.zshrc
+    dest: ~/.zshrc
     regexp: "^DEFAULT_USER={{ lookup('env','USER') }}"
     insertafter: '/python27/bin/activate'
     line: "DEFAULT_USER={{ lookup('env','USER') }}"
@@ -45,7 +45,7 @@
 
 - name: change prompt context for the default user
   lineinfile:
-    path: ~/.zshrc
+    dest: ~/.zshrc
     regexp: '^prompt_context'
     insertafter: "^DEFAULT_USER={{ lookup('env','USER') }}"
     line: 'prompt_context(){}'
@@ -53,7 +53,7 @@
 
 - name: add zsh powerline-status bindings
   lineinfile:
-    path: ~/.zshrc
+    dest: ~/.zshrc
     regexp: "^. {{ powerlineStatusLocation.stdout }}/powerline/bindings/zsh/powerline.zsh"
     insertafter: '^prompt_context(){}'
     line: ". {{ powerlineStatusLocation.stdout }}/powerline/bindings/zsh/powerline.zsh"
@@ -61,7 +61,7 @@
 
 - name: add powerline scripts location to PATH
   lineinfile:
-    path: ~/.zshrc
+    dest: ~/.zshrc
     regexp: "{{ powerlineStatusLocation.stdout }}/../../../bin:"
     insertafter: '^# export PATH='
     line: "export PATH=$HOME/bin:{{ powerlineStatusLocation.stdout }}/../../../bin:$PATH"
@@ -69,7 +69,7 @@
 
 - name: enable oh-my-zsh plugins
   lineinfile:
-    path: ~/.zshrc
+    dest: ~/.zshrc
     regexp: "^plugins="
     insertafter: '^plugins='
     line: "plugins=(git git-prompt git-remote-branch colored-man-pages colorize)"
@@ -77,7 +77,7 @@
 
 - name: change history date format to yyyy-mm-dd
   lineinfile:
-    path: ~/.zshrc
+    dest: ~/.zshrc
     regexp: "^HIST_STAMPS="
     insertafter: '^# HIST_STAMPS='
     line: 'HIST_STAMPS="yyyy-mm-dd"'

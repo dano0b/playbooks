@@ -12,6 +12,11 @@
   tags:
     - package
     - zsh
+    - git
+    - curl
+    - socat
+    - python2-devel
+    - redhat-rpm-config
   when:
     - ansible_distribution == "MacOSX"
 
